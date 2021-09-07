@@ -1,0 +1,16 @@
+{
+  "source": {
+    "port" : "5432",
+    "host": "localhost",
+    "user": "postgres",
+    "table": "first_table",
+    "password": "Dima_4007"
+  },
+  "destination": {
+    "port" : "5433",
+    "host": "localhost",
+    "user": "postgres",
+    "table": "second_one",
+    "password": "123"
+  }
+}
