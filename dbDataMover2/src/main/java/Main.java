@@ -42,7 +42,6 @@ public class Main {
     public static List<Row> rowList (ConfigF configF) throws SQLException {
         Statement statementSource = connection(configF.source).createStatement();
         ResultSet resultSetSource = statementSource.executeQuery("SELECT * FROM "+configF.getSource().getTable());
-
         List<Row> tableSecond = new ArrayList<>();
         while ( resultSetSource.next() ) {
             Row row = new Row();
@@ -51,22 +50,17 @@ public class Main {
             row.setProfession(resultSetSource.getString("profession"));
             tableSecond.add(row);
         }
-        return tableSecond;
-    }
+        return tableSecond;}
     public static void downloadToBase (ConfigF configF, List<Row> rowList, int batch) throws SQLException {
         Statement statementDest = connection(configF.destination).createStatement();
         for (int n = -1; n < rowList.size(); n = n + batch) {
             String packet = "";
             for (int j = n+1; j < n + batch; j++) {
-                String singleRow = "(" + rowList.get(j).getId() + ",'" +
-                        rowList.get(j).getName() + "','" +
-                        rowList.get(j).getProfession() + "'),";
-                packet += singleRow;}
-            packet = packet.substring(0, packet.length() - 1);
-            String sqlTest = String.format("INSERT INTO %s(id,name,profession) VALUES %s;",
+                packet += rowList.get(j).asString()+",";}
+            String sqlDownload = String.format("INSERT INTO %s(id,name,profession) VALUES %s;",
                     configF.getDestination().getTable(),
-                    packet);
-            statementDest.executeUpdate(sqlTest);
+                    packet.substring(0, packet.length() - 1));
+            statementDest.executeUpdate(sqlDownload);
         }
     }
     public static void downloadToBaseNew (ConfigF configF, List<Row> rowList, int batch) throws SQLException {
